@@ -44,6 +44,7 @@ class CerealStorageImpl(
         if (amount < 0) throw IllegalArgumentException()
         val currentAmount = getAmount(cereal)
         if (amount > currentAmount) {
+            storage[cereal] = 0f
             return currentAmount
         }
         else {
