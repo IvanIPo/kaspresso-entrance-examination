@@ -59,8 +59,8 @@ class CerealStorageImplTest {
     @Test
     fun getCerealTest() {
         storage.addCereal(Cereal.BULGUR, 5.50005f)
-        storage.addCereal(Cereal.BUCKWHEAT, 7.5f)
-        assertEquals(4.5f, storage.getCereal(Cereal.BULGUR, 1.000436f), 0.01f)
+        assertEquals(1.0f, storage.getCereal(Cereal.BULGUR, 1.000436f), 0.01f)
+        assertEquals(4.5f, storage.getCereal(Cereal.BULGUR, 5f), 0.01f)
     }
 
     @Test

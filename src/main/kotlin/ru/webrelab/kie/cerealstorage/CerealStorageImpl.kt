@@ -42,9 +42,14 @@ class CerealStorageImpl(
 
     override fun getCereal(cereal: Cereal, amount: Float): Float {
         if (amount < 0) throw IllegalArgumentException()
-        val remainder = getAmount(cereal) - amount
-        storage[cereal] = if (remainder < 0) 0f else remainder
-        return remainder
+        val currentAmount = getAmount(cereal)
+        if (amount > currentAmount) {
+            return currentAmount
+        }
+        else {
+            storage[cereal] = currentAmount - amount
+            return amount
+        }
     }
 
     override fun removeContainer(cereal: Cereal): Boolean {
