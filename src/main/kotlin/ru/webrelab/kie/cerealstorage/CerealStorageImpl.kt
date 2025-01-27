@@ -19,5 +19,56 @@ class CerealStorageImpl(
     }
 
     private val storage = mutableMapOf<Cereal, Float>()
+    override fun addCereal(cereal: Cereal, amount: Float): Float {
+        if (amount < 0) throw IllegalArgumentException()
+        if (!storage.containsKey(cereal) && !isEnoughSpaceForNewContainer()) {
+            throw IllegalStateException()
+        } else {
+            val newValue = getAmount(cereal) + amount
+            if (newValue > containerCapacity) {
+                storage[cereal] = containerCapacity
+                return newValue - containerCapacity
+            } else {
+                storage[cereal] = newValue
+                return 0f
+            }
+        }
+    }
+
+    private fun isEnoughSpaceForNewContainer(): Boolean {
+        val emptySpace = storageCapacity - containerCapacity * storage.size
+        return emptySpace >= containerCapacity
+    }
+
+    override fun getCereal(cereal: Cereal, amount: Float): Float {
+        if (amount < 0) throw IllegalArgumentException()
+        val remainder = getAmount(cereal) - amount
+        storage[cereal] = if (remainder < 0) 0f else remainder
+        return remainder
+    }
+
+    override fun removeContainer(cereal: Cereal): Boolean {
+        if (getAmount(cereal) == 0f) {
+            storage.remove(cereal)
+            return true
+        } else return false
+    }
+
+    override fun getAmount(cereal: Cereal): Float {
+        return storage[cereal] ?: 0f
+    }
+
+    override fun getSpace(cereal: Cereal): Float {
+        return containerCapacity - getAmount(cereal)
+    }
+
+    override fun toString(): String {
+        val mainData = "Объём хранилища: $storageCapacity\n" +
+                "Объём одного контейнера: $containerCapacity\n" +
+                "Количество контейнеров: ${storage.size}, в частности:"
+        val sb = StringBuilder().append(mainData)
+        storage.forEach { container -> sb.append("\n${container.key.local} — ${container.value}") }
+        return sb.toString()
+    }
 
 }
